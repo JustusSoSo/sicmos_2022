@@ -1,0 +1,26 @@
+go atlas simflags=" -P 2"
+
+mesh inf=vdmos.str
+contact name=source
+contact name=gate
+
+models fldmob auger fermi conmob analytic srh optr bgn print
+
+method newton trap maxtrap=10
+solve initial
+
+
+
+# Bias the drain 
+solve vdrain=0.1
+
+log outf=vdmos_IV.log
+solve vgate=0 vstep=0.5 name=gate vfinal=4
+#save outf=vdmos_IV_2.5.str
+solve vstep=0.05 name=gate vfinal=5.5
+
+solve vstep=0.5 name=gate vfinal=10
+
+
+log off
+quit

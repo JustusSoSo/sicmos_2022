@@ -1,0 +1,264 @@
+# (c) Silvaco Inc., 2015
+go devedit
+
+DevEdit version=2.4.0.R
+
+work.area x1=0 y1=-0.68 x2=10 y2=15
+# devedit 2.4.0.R (Thu May  8 12:10:27 PDT 1997)
+# libsflm 2.0.0.R (Thu May  1 18:03:38 PDT 1997)
+# libDW_Misc 1.20.0.R (Mon Apr 28 17:55:25 PDT 1997)
+# libCardDeck 1.20.0.R (Tue Apr 29 15:01:54 PDT 1997)
+# libGeometry 1.20.0.R (Mon Apr 28 18:17:55 PDT 1997)
+# libDW_Set 1.20.0.R (Mon Apr 28 17:57:52 PDT 1997)
+# libSVC_Misc 1.20.0.R (Mon Apr 28 18:20:53 PDT 1997)
+# libSDB 1.0.6.C (Mon May  5 16:28:49 PDT 1997)
+# libSSS 1.20.0.R (Mon May  5 16:29:45 PDT 1997)
+# libMeshBuild 1.20.0.R (Wed May  7 23:57:48 PDT 1997)
+# libDW_Make 1.1.3.R (Thu May  1 20:07:31 PDT 1997)
+region reg=1 name=n+sub mat=3C-SiC color=0x7f00ff pattern=0x8 \
+	polygon="0,15 0,10 7.5,10 7.5,15"
+#
+impurity id=1 region.id=1 imp=Arsenic \
+	peak.value=1e+19 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=1 default max.height=2
+
+region reg=2 name=n-drift mat=3C-SiC color=0x7f00ff pattern=0x8 \
+	polygon="5,1.5 5,0 7.5,0 7.5,10 0,10 0,1.5"
+#
+impurity id=1 region.id=2 imp=Arsenic \
+	peak.value=1e+16 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=2 default max.height=1.25
+
+region reg=3 name=pbase mat=3C-SiC color=0x7f00ff pattern=0x8 \
+	polygon="1,0.5 3,0.5 3,0 5,0 5,1.5 0,1.5 0,0 1,0"
+#
+impurity id=1 region.id=3 imp=Boron \
+	peak.value=1e+17 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=3 default
+
+region reg=4 name=n+source mat=3C-SiC color=0x7f00ff pattern=0x8 \
+	polygon="1,0 2,0 3,0 3,0.5 1,0.5"
+#
+impurity id=1 region.id=4 imp=Arsenic \
+	peak.value=1e+18 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=4 default max.width=0.25
+
+region reg=5 mat="Silicon Oxide" \
+	polygon="3,0 2,0 2,-0.08 2.5,-0.08 7.5,-0.08 7.5,0 5,0"
+#
+constr.mesh region=5 default
+
+region reg=6 name=source mat=Aluminum elec.id=1 work.func=0 color=0xffc8c8 pattern=0x7 \
+	polygon="0,0 0,-0.3 2,-0.3 2,-0.08 2,0 1,0"
+#
+constr.mesh region=6 default max.width=0.25
+
+region reg=7 name=gate mat=Aluminum elec.id=2 work.func=0 color=0xffc8c8 pattern=0x7 \
+	polygon="2.5,-0.08 2.5,-0.38 7.5,-0.38 7.5,-0.08"
+#
+constr.mesh region=7 default
+
+substrate name="drain" electrode=3 workfunction=0
+
+
+# Set Meshing Parameters
+#
+base.mesh height=2.5 width=1
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Net Doping" scale=log transition=1e+10
+imp.refine min.spacing=0.02
+#
+constr.mesh  max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default max.height=2
+#
+constr.mesh region=2 default max.height=1.25
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default max.width=0.25
+#
+constr.mesh region=5 default
+#
+constr.mesh region=6 default max.width=0.25
+#
+constr.mesh region=7 default
+constr.mesh id=1 under.reg=gate depth=0.1 default max.height=0.0125 max.width=0.5
+constr.mesh id=2 x1=0 y1=0.25 x2=1e+06 y2=2 default max.height=0.1
+constr.mesh id=3 under.reg=source depth=0.1 default max.height=0.02 max.width=0.25
+constr.mesh id=4 x1=0 y1=8 x2=1e+06 y2=11 default max.height=0.4
+constr.mesh id=5 x1=0 y1=2 x2=1e+06 y2=4 default max.height=0.6
+Mesh Mode=MeshBuild
+
+
+base.mesh height=2.5 width=1
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+struct outf=sicex03_0.str
+
+go atlas
+
+#
+TITLE : DMOS POWER DEVICE SIMULATION
+
+mesh infile=sicex03_0.str
+
+
+material material=3C-SiC permitti=9.66 eg300=2.99 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100
+
+models  analytic conmob fldmob srh auger fermi optr bgn print 
+
+# Standard isotropic mobility in plane <1100>
+#
+mobility material=3C-SiC	vsatn=2e7 vsatp=2e7 betan=2 betap=2 \
+			mu1n.caug=10  mu2n.caug=410 ncritn.caug=13e17  \
+			deltan.caug=0.6 gamman.caug=0.0 \
+			alphan.caug=-3 betan.caug=-3 \
+			mu1p.caug=20   mu2p.caug=95  ncritp.caug=1e19 \
+			deltap.caug=0.5  gammap.caug=0.0 \
+			alphap.caug=-3 betap.caug=-3
+#
+contact name=gate n.poly
+# 
+tonyplot sicex03_0.str -set sicex03_0.set
+#
+solve    init 
+solve    prev
+
+method  newton  
+solve prev vfinal=20 name=gate vstep=1
+save outf=sicex03_1.str
+
+method   newton trap maxtrap=10  
+log outf=sicex03_1.log
+solve prev vfinal=15 vstep=2.5 name=drain
+
+output flowlines e.mobility h.mobility
+save outf=sicex03_2.str
+
+solve prev vfinal=60 vstep=5 name=drain
+
+go atlas
+
+#
+TITLE : DMOS POWER DEVICE SIMULATION
+
+mesh infile=sicex03_0.str
+
+
+material material=3C-SiC permitti=9.66 eg300=2.99 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100
+
+models  analytic conmob fldmob srh auger fermi optr bgn print 
+
+# Standard isotropic mobility in plane <1000>
+#
+mobility material=3C-SiC	vsatn=2e7 vsatp=2e7 betan=2 betap=2 \
+			mu1n.caug=5  mu2n.caug=80 ncritn.caug=13e17  \
+			deltan.caug=0.6 gamman.caug=0.0 \
+			alphan.caug=-3 betan.caug=-3 \
+			mu1p.caug=2.5   mu2p.caug=20  ncritp.caug=1e19 \
+			deltap.caug=0.5  gammap.caug=0.0 \
+			alphap.caug=-3 betap.caug=-3
+#
+contact name=gate n.poly
+# 
+ 
+solve    init 
+solve    prev
+
+method  newton  
+solve prev vfinal=20 name=gate vstep=1
+save outf=sicex03_3.str
+
+method   newton trap maxtrap=10  
+log outf=sicex03_2.log
+solve prev vfinal=15 vstep=2.5 name=drain
+
+output flowlines e.mobility h.mobility
+save outf=sicex03_4.str
+
+solve prev vfinal=60 vstep=5 name=drain
+
+go atlas
+
+#
+TITLE : DMOS POWER DEVICE SIMULATION
+
+mesh infile=sicex03_0.str
+
+
+material material=3C-SiC permitti=9.66 eg300=2.99 affinity=4.2 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100
+
+models  analytic conmob fldmob srh auger fermi optr bgn print 
+
+# Anisotropic mobility model
+#
+# First define mobility in plane <1100>
+#
+mobility material=3C-SiC	vsatn=2e7 vsatp=2e7 betan=2 betap=2 \
+			mu1n.caug=10  mu2n.caug=410 ncritn.caug=13e17  \
+			deltan.caug=0.6 gamman.caug=0.0 \
+			alphan.caug=-3 betan.caug=-3 \
+			mu1p.caug=20   mu2p.caug=95  ncritp.caug=1e19 \
+			deltap.caug=0.5  gammap.caug=0.0 \
+			alphap.caug=-3 betap.caug=-3
+#
+# Now define mobility in plane <1000>
+#
+mobility material=3C-SiC	n.angle=90.0 p.angle=90.0 vsatn=2e7 vsatp=2e7 \
+			betan=2 betap=2 mu1n.caug=5  mu2n.caug=80 ncritn.caug=13e17  \
+			deltan.caug=0.6 gamman.caug=0.0 \
+			alphan.caug=-3 betan.caug=-3 \
+			mu1p.caug=2.5   mu2p.caug=20  ncritp.caug=1e19 \
+			deltap.caug=0.5  gammap.caug=0.0 \
+			alphap.caug=-3 betap.caug=-3
+
+contact name=gate n.poly
+# 
+ 
+solve    init 
+solve    prev
+
+method  newton  
+solve prev vfinal=20 name=gate vstep=1
+save outf=sicex03_5.str
+
+method   newton trap maxtrap=10  
+log outf=sicex03_3.log
+solve prev vfinal=15 vstep=2.5 name=drain
+
+output flowlines e.mobility h.mobility
+save outf=sicex03_6.str
+
+solve prev vfinal=60 vstep=5 name=drain
+
+
+# Now plot three Id-Vd curves to compare mobility models
+tonyplot -overlay sicex03_1.log sicex03_2.log sicex03_3.log -set sicex03_1.set
+
+quit

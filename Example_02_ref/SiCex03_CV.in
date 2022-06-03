@@ -1,0 +1,21 @@
+
+go atlas simflags=" -P 20"
+mesh infile=sicex03_0.str
+
+
+contact name=source workfunction=4.18 surf.rec  me.tunnel=0.515 mh.tunnel=0.515
+contact name=gate workfunction=4.18 
+
+models temp=300 analytic srh fldmob auger  fermi print 
+impact selb aniso sic4h0001 e.side
+output con.band val.band t.quantum
+
+method newton
+
+solve initial 
+log outf = sicex03_cv.log
+save outf = sicex03_0V.str
+solve vdrain=0 vstep=0.5 vfinal=20 name=drain ac freq=1e6 direct
+solve vstep=10 vfinal=2000 name=drain ac freq=1e6 direct
+log off
+quit

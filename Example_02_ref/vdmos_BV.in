@@ -1,0 +1,70 @@
+#BV
+go atlas simflags="-128 -P 10" 
+
+mesh infile=vdmos.str
+contact name=gate n.poly
+
+
+models temp=300 CVT analytic conmob fldmob srh auger fermi optr bgn print 
+
+impact selb aniso sic4h0001 e.side
+
+
+solve init
+solve prev
+
+
+method itlimit=70 climit=1e-20 ix.tol=1e-38 ir.tol=1e-38 \
+   px.tol=1.e-20 pr.tol=1.e-43 \
+   cx.tol=1.e-20 cr.tol=1.e-35
+
+#output flowlines e.mobility h.mobility
+
+log outf=BV.log
+solve vdrain=0.001 
+solve vdrain=0.005 
+solve vdrain=0.01 
+solve vdrain=0.1 
+solve vdrain=0.5 
+solve vdrain=1  
+
+solve prev vfinal=100 vstep=20 name=drain
+solve prev vfinal=200 vstep=50 name=drain
+
+solve prev vfinal=1000 vstep=100 name=drain
+save outfile=BV_1000V.str
+solve prev vfinal=1600 vstep=100 name=drain
+save outfile=BV_1600V.str
+solve prev vfinal=1800 vstep=100 name=drain
+save outfile=BV_1800V.str
+solve prev vfinal=2000 vstep=100 name=drain
+save outfile=BV_2000V.str
+solve prev vfinal=2200 vstep=100 name=drain
+save outfile=BV_2200V.str
+solve prev vfinal=2400 vstep=100 name=drain
+save outfile=BV_2400V.str
+solve prev vfinal=2600 vstep=100 name=drain
+save outfile=BV_2600V.str
+solve prev vfinal=2800 vstep=100 name=drain
+save outfile=BV_2800V.str
+solve prev vfinal=3000 vstep=100 name=drain
+save outfile=BV_3000V.str
+solve prev vfinal=3200 vstep=20 name=drain
+save outfile=BV_3200V.str
+solve prev vfinal=3400 vstep=20 name=drain
+save outfile=BV_3400V.str
+solve prev vfinal=3600 vstep=20 name=drain
+save outfile=BV_3600V.str
+solve prev vfinal=3800 vstep=20 name=drain
+save outfile=BV_3800V.str
+solve prev vfinal=4000 vstep=20 name=drain
+save outfile=BV_4000V.str
+solve prev vfinal=4200 vstep=20 name=drain
+save outfile=BV_4200V.str
+solve prev vfinal=4400 vstep=20 name=drain
+save outfile=BV_4400V.str
+solve prev vfinal=4600 vstep=20 name=drain
+save outfile=BV_4600V.str
+solve prev vfinal=4800 vstep=20 name=drain
+save outfile=BV_4800V.str
+log off

@@ -1,0 +1,41 @@
+
+go atlas simflags="-P 10"
+
+.begin
+Vg 1 0 pwl 0 0  10e-6 0  10.01e-6 20  22.51e-6 20  22.52e-6 0  24e-6 0  24.01e-6 20  26e-6 20  26.01e-6 0  27e-6 0
+
+#
+amos1 0=source 2=gate 3=drain infile=SiC_MOS.str width=3968990
+Rg1 1 2 20
+amos2 3=source 6=gate 4=drain infile=SiC_MOS.str width=3968990
+Rg2 5 6 20
+c  4 0 42.3u
+Vds 4 0 800
+L1 4 3 1mH
+#
+.numeric lte=0.3 toltr=1.e-4 vchange=2 IMAXDC=1000
+.options print relpot write=300
+
+.save tsave=22.5us
+.save tsave=22.515us
+.save tsave=23us
+.save tsave=24.005us
+.save tsave=25us
+
+.log  outfile=vdmos
+.save master=vdmos_fwd
+
+.tran 50ns 28us
+
+.end
+
+models device=amos1 temp=300 CVT analytic conmob fldmob srh auger fermi optr bgn print
+models device=amos2 temp=300 CVT analytic conmob fldmob srh auger fermi optr bgn print
+impact device=amos1 selb gradqfl
+impact device=amos2 selb gradqfl
+
+go atlas simflags="-P 10"
+tonyplot vdmos_tr.log
+
+quit
+
